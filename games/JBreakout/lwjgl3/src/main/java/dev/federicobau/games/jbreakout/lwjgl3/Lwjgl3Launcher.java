@@ -1,10 +1,13 @@
 package dev.federicobau.games.jbreakout.lwjgl3;
 
+import com.badlogic.gdx.Graphics;
 import com.badlogic.gdx.backends.lwjgl3.Lwjgl3Application;
 import com.badlogic.gdx.backends.lwjgl3.Lwjgl3ApplicationConfiguration;
 import dev.federicobau.games.jbreakout.JBreakout;
 
-/** Launches the desktop (LWJGL3) application. */
+/**
+ * Launches the desktop (LWJGL3) application.
+ */
 public class Lwjgl3Launcher {
     public static void main(String[] args) {
         if (StartupHelper.startNewJvmIfRequired()) return; // This handles macOS support and helps on Windows.
@@ -28,7 +31,53 @@ public class Lwjgl3Launcher {
         //// useful for testing performance, but can also be very stressful to some hardware.
         //// You may also need to configure GPU drivers to fully disable Vsync; this can cause screen tearing.
 
-        configuration.setWindowedMode(640, 480);
+
+        //// ---------------------------
+        ///     Display Settings
+        //// ---------------------------
+//        configuration.setWindowedMode(640, 480);
+//        configuration.setMaximized(true);
+//
+//        Graphics.DisplayMode displayMode = Lwjgl3ApplicationConfiguration.getDisplayMode();
+//        int screenWidth = displayMode.width;
+//        int screenHeight = displayMode.height;
+
+        // Set window to 80% of screen size
+//        int windowWidth = (int)(displayMode.width * 0.8f);
+//        int windowHeight = (int)(displayMode.height * 0.8f);
+
+//        configuration.setWindowedMode(screenWidth / 2, screenHeight / 2);
+//        configuration.setWindowedMode(windowWidth, windowHeight);
+
+        // Get all available monitors
+        Graphics.Monitor[] monitors = Lwjgl3ApplicationConfiguration.getMonitors();
+        for (Graphics.Monitor monitor : monitors) {
+            System.out.println("Monitor >> " + monitor.name);
+        }
+
+        // Choose which monitor (0 = primary, 1 = secondary, etc.)
+//        Graphics.Monitor targetMonitor = monitors.length > 1 ? monitors[1] : monitors[0]; // Change index to select different monitor
+
+        // 1) Get the target Monitor
+        int monitorIndex = 2;
+        Graphics.Monitor targetMonitor = monitors[monitorIndex];
+        // 2) Get Monitor's display mode
+        Graphics.DisplayMode displayMode = Lwjgl3ApplicationConfiguration.getDisplayMode(targetMonitor);
+        // 3) Get Monitor's size
+        int windowWidth = (int) (displayMode.width * 0.8f);
+        int windowHeight = (int) (displayMode.height * 0.8f);
+        System.out.println("Monitor >> " + targetMonitor.name + " " + monitorIndex + " W=" + windowWidth + " H=" + windowHeight);
+        // 4) Center the window on the target monitor
+        int centerX = targetMonitor.virtualX + (displayMode.width - windowWidth) / 2;
+        int centerY = targetMonitor.virtualY + (displayMode.height - windowHeight) / 2;
+        configuration.setWindowPosition(centerX, centerY);
+        // 5) Set the window size
+        configuration.setWindowedMode(windowWidth, windowHeight);
+        // set full screen
+//        configuration.setFullscreenMode(displayMode);
+//        configuration.setMaximized(true);
+
+
         //// You can change these files; they are in lwjgl3/src/main/resources/ .
         //// They can also be loaded from the root of assets/ .
         configuration.setWindowIcon("libgdx128.png", "libgdx64.png", "libgdx32.png", "libgdx16.png");
