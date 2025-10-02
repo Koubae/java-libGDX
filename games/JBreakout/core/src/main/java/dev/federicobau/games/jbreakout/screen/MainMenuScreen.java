@@ -19,16 +19,32 @@ public class MainMenuScreen implements Screen {
     @Override
     public void render(float delta) {
         ScreenUtils.clear(Color.BLACK);
+
+        // Update camera
+        game.camera.update();
+
+        // Apply camera to renderers
+        game.renderer.setProjectionMatrix(game.camera.combined);
+        game.batch.setProjectionMatrix(game.camera.combined);
+
+
+        float screenWidth = game.viewport.getWorldWidth();
+        float screenHeight = game.viewport.getWorldHeight();
+
         game.renderer.begin(ShapeRenderer.ShapeType.Filled);
 
         game.renderer.setColor(1, 0, 0, 1); // Red
         game.renderer.rect(100, 100, 200, 50);
+        game.renderer.rect(screenWidth / 2, screenHeight / 2, 200, 50);
 
         game.renderer.end();
 
         // Draw text
         game.batch.begin();
         game.font.draw( game.batch, "Hello World!", 100, 200);
+
+        game.font.draw(game.batch, "Screen: " + screenWidth + "x" + (int)screenHeight, 400, 200);
+
         game.batch.end();
 
 
