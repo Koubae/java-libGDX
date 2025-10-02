@@ -41,18 +41,17 @@ public class MainMenuScreen implements Screen {
 
         // Draw text
         game.batch.begin();
-        game.font.draw( game.batch, "Hello World!", 100, 200);
 
+        game.font.draw( game.batch, "Hello World!", 100, 200);
         game.font.draw(game.batch, "Screen: " + screenWidth + "x" + (int)screenHeight, 400, 200);
 
         game.batch.end();
-
 
     }
 
     @Override
     public void resize(int width, int height) {
-//        game.viewport.update(width, height, true);
+        game.viewport.update(width, height, true);
     }
 
     @Override
