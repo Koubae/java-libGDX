@@ -1,5 +1,7 @@
 package dev.federicobau.games.jbreakout.screen;
 
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
@@ -18,6 +20,8 @@ public class MainMenuScreen implements Screen {
 
     @Override
     public void render(float delta) {
+        input();
+
         ScreenUtils.clear(Color.BLACK);
 
         // Update camera
@@ -49,6 +53,8 @@ public class MainMenuScreen implements Screen {
 
     }
 
+
+
     @Override
     public void resize(int width, int height) {
         game.viewport.update(width, height, true);
@@ -73,4 +79,11 @@ public class MainMenuScreen implements Screen {
     public void dispose() {
 
     }
+
+    private void input() {
+        if (Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE)) {
+            Gdx.app.exit();
+        }
+    }
+
 }
