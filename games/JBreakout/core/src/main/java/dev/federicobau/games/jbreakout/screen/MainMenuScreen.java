@@ -4,9 +4,6 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.Color;
-import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.BitmapFont;
-import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
@@ -14,9 +11,11 @@ import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
-import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.ScreenUtils;
+
 import dev.federicobau.games.jbreakout.JBreakout;
+import dev.federicobau.games.jbreakout.config.UIConstants;
+
 
 public class MainMenuScreen implements Screen {
     final JBreakout game;
@@ -45,20 +44,22 @@ public class MainMenuScreen implements Screen {
         btnSettings = new TextButton("Settings", skin);
         btnQuit = new TextButton("Exit", skin, "grey");
 
-        btnStart.setSize(200, 60);
-        btnSettings.setSize(200, 60);
-        btnQuit.setSize(200, 60);
+        btnStart.setSize(UIConstants.BUTTON_WIDTH, UIConstants.BUTTON_HEIGHT);
+        btnSettings.setSize(UIConstants.BUTTON_WIDTH, UIConstants.BUTTON_HEIGHT);
+        btnQuit.setSize(UIConstants.BUTTON_WIDTH, UIConstants.BUTTON_HEIGHT);
 
         // Table layout
         Table layoutBtn = new Table();
         layoutBtn.setFillParent(true);   // fills the stage; auto re-layout on resize
-        layoutBtn.defaults().width(200).height(60).pad(10);
+        layoutBtn.defaults()
+            .width(UIConstants.BUTTON_WIDTH)
+            .height(UIConstants.BUTTON_HEIGHT)
+            .pad(UIConstants.BUTTON_MARGIN_Y);
 
         layoutBtn.center();
         layoutBtn.add(btnStart).row();
         layoutBtn.add(btnSettings).row();
         layoutBtn.add(btnQuit);
-
         stage.addActor(layoutBtn);
 
         _registerEventListeners();
