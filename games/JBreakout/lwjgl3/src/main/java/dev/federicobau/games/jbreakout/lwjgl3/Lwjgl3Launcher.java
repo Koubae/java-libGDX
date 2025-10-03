@@ -16,7 +16,10 @@ public class Lwjgl3Launcher {
     }
 
     private static Lwjgl3Application createApplication() {
-        return new Lwjgl3Application(new JBreakout(), getDefaultConfiguration());
+        Lwjgl3Application application = new Lwjgl3Application(new JBreakout(), getDefaultConfiguration());
+        Gdx.app.log("Lwjgl3Launcher", "Application created " + application);
+
+        return application;
     }
 
     private static Lwjgl3ApplicationConfiguration getDefaultConfiguration() {
@@ -69,7 +72,6 @@ public class Lwjgl3Launcher {
         int windowHeight = (int) (displayMode.height * 0.8f);
         System.out.println("Monitor >> " + targetMonitor.name + " " + monitorIndex + " W=" + windowWidth + " H=" + windowHeight);
 
-//        Gdx.app.log("Lwjgl3Launcher", "Monitor >> " + targetMonitor.name + " " + monitorIndex + " W=" + windowWidth + " H=" + windowHeight);
 
         // 4) Center the window on the target monitor
         int centerX = targetMonitor.virtualX + (displayMode.width - windowWidth) / 2;

@@ -75,6 +75,13 @@ public class MainMenuScreen implements Screen {
         greenButton.setPosition(200, 300);
 
         stage.addActor(greenButton);
+
+        // Green here is a custom style added in uiskin.json
+        TextButton greenCustomStyleButton = new TextButton("Play 2", skin, "green");
+        greenCustomStyleButton.setSize(200, 60);
+        greenCustomStyleButton.setPosition(400, 300);
+
+        stage.addActor(greenCustomStyleButton);
     }
 
     @Override
@@ -89,7 +96,6 @@ public class MainMenuScreen implements Screen {
         // Apply camera to renderers
         game.renderer.setProjectionMatrix(game.camera.combined);
         game.batch.setProjectionMatrix(game.camera.combined);
-
 
         float screenWidth = game.viewport.getWorldWidth();
         float screenHeight = game.viewport.getWorldHeight();
