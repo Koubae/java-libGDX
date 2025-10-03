@@ -48,17 +48,7 @@ public class MainMenuScreen implements Screen {
         btnSettings.setSize(200, 60);
         btnQuit.setSize(200, 60);
 
-        float screenWidthHalf = Gdx.graphics.getWidth() / 2f;
-        float screenHeightHalf = Gdx.graphics.getHeight() / 2f;
-
-        float btnScreenPosX = screenWidthHalf - btnStart.getWidth() / 2;
-        float btnScreenPosY = (screenHeightHalf - btnStart.getHeight() / 2) + 100;
-        int marginY = 20;
-
-        btnStart.setPosition(btnScreenPosX, btnScreenPosY);
-        btnSettings.setPosition(btnScreenPosX, btnScreenPosY - btnStart.getHeight() - marginY);
-        btnQuit.setPosition(btnScreenPosX, btnScreenPosY - (btnStart.getHeight() * 2) - (marginY * 2));
-
+        this.setBtnPositions();
 
         stage.addActor(btnStart);
         stage.addActor(btnSettings);
@@ -136,6 +126,19 @@ public class MainMenuScreen implements Screen {
     @Override
     public void resize(int width, int height) {
         stage.getViewport().update(width, height, true);
+        this.setBtnPositions();
+    }
+
+    private void setBtnPositions() {
+        float w = stage.getViewport().getWorldWidth();
+        float h = stage.getViewport().getWorldHeight();
+
+        float btnX = w / 2f - btnStart.getWidth() / 2f;
+        float btnY = h / 2f - btnStart.getHeight() / 2f + 100f;
+        float marginY = 20f;
+        btnStart.setPosition(btnX, btnY);
+        btnSettings.setPosition(btnX, btnY - btnStart.getHeight() - marginY);
+        btnQuit.setPosition(btnX, btnY - (btnStart.getHeight() * 2f) - (marginY * 2f));
     }
 
     @Override
