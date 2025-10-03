@@ -1,8 +1,12 @@
 package dev.federicobau.games.jbreakout.screen;
 
+import java.util.ArrayList;
+import java.nio.file.Path;
+
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.GlyphLayout;
@@ -15,7 +19,6 @@ import dev.federicobau.games.jbreakout.entities.Block;
 import dev.federicobau.games.jbreakout.entities.Paddle;
 import dev.federicobau.games.jbreakout.entities.Ball;
 
-import java.util.ArrayList;
 
 public class GameScreen implements Screen {
     final JBreakout game;
@@ -30,8 +33,18 @@ public class GameScreen implements Screen {
     private boolean gameOver;
     private BitmapFont livesTextFont;
 
+    // Sounds Effect & Music
+    Sound ballBouncePaddleSound;
+    Sound blockDestroyedSound;
+
     public GameScreen(JBreakout game) {
         this.game = game;
+
+        // Sounds Effect & Music
+        ballBouncePaddleSound = Gdx.audio.newSound(
+            Gdx.files.internal(String.valueOf(Path.of("sounds", UIConstants.BALL_BOUNCE_SOUND_PADDLE))));
+        blockDestroyedSound = Gdx.audio.newSound(
+            Gdx.files.internal(String.valueOf(Path.of("sounds", UIConstants.BLOCK_DESTROY_SOUND))));
 
         // Game State
         this.score = 0;
@@ -60,6 +73,7 @@ public class GameScreen implements Screen {
         livesTextFont = game.getGenerator().generateFont(parameter);
 
     }
+
     @Override
     public void resize(int width, int height) {
 
@@ -82,6 +96,8 @@ public class GameScreen implements Screen {
 
     @Override
     public void dispose() {
+        ballBouncePaddleSound.dispose();
+        blockDestroyedSound.dispose();
         livesTextFont.dispose();
     }
 
@@ -160,7 +176,10 @@ public class GameScreen implements Screen {
         paddle.update(delta);
         paddle.draw(game.renderer);
 
-        ball.update(delta, paddle, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+        boolean collided = ball.update(delta, paddle, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+        if (collided) {
+            ballBouncePaddleSound.play();
+        }
         if (ball.isDestroyed()) {
             this.playerLives -= 1;
             this.ball = _createNewBall();
@@ -169,15 +188,18 @@ public class GameScreen implements Screen {
             ball.draw(game.renderer);
         }
 
-        for (Block block: blocks) {
+        // TODO Improve. get list of destroy indexed!
+        for (Block block : blocks) {
             block.draw(game.renderer);
-            ball.blockHitCheck(block);
+            if (ball.blockHitCheck(block)) {
+                blockDestroyedSound.play();
+                score += 1;
+            }
         }
         // Remove destroyed blocks
-        for (int i = 0; i < blocks.size(); i ++) {
+        for (int i = 0; i < blocks.size(); i++) {
             Block block = blocks.get(i);
             if (block.isDestroyed()) {
-                score += 1;
                 blocks.remove(i);
                 i--;  // we need to decrement i when a ball gets removed, otherwise we skip a ball!
             }
@@ -216,7 +238,7 @@ public class GameScreen implements Screen {
         int yNext = blockHeight + margin;
 
         int xStart = (margin * 2);
-        int xEnd = (int)((width - blockWidth - margin));
+        int xEnd = (int) ((width - blockWidth - margin));
         int xNext = blockWidth + margin;
 
         for (int y = yStart; y < yEnd; y += yNext) {

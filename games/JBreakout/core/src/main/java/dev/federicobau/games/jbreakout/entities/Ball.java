@@ -37,7 +37,7 @@ public class Ball {
         shape.circle(x, y, size);
     }
 
-    public void update(float delta, Paddle paddle, float worldWidth, float worldHeight) {
+    public boolean update(float delta, Paddle paddle, float worldWidth, float worldHeight) {
         // move
         x += xSpeed * delta;
         y += ySpeed * delta;
@@ -64,6 +64,8 @@ public class Ball {
         } else {
             this.destroyIfTouchOrNearBottom();
         }
+
+        return collided;
     }
 
     private boolean collisionWithPaddle(Paddle paddle) {
@@ -77,18 +79,20 @@ public class Ball {
 
     }
 
-    public void blockHitCheck(Block block) {
+    public boolean blockHitCheck(Block block) {
         boolean collided = ((x + size) >= block.getX())
             && (x - size) <= (block.getX() + block.getWidth())
             && ((y + size) >= block.getY())
             && (y - size) <= (block.getY() + block.getHeight());
 
         if (!collided) {
-            return;
+            return false;
         }
 
         block.destroy();
         reverseY();
+
+        return true;
 
     }
 
