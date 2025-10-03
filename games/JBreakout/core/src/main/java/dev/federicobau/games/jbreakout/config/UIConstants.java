@@ -34,4 +34,11 @@ public final class UIConstants {
     public static final Color BALL_COLOR_ON_HIT = Color.RED;
     public static final int BALL_SPEED = 500;
 
+    // Blocks
+    public static final int BLOCK_WIDTH = 15;
+    public static final int BLOCK_HEIGHT = 20;
+    public static final int BLOCK_MARGIN = 10;
+    public static final Color BLOCK_COLOR = Color.GREEN;
+    public static final Color BLOCK_DESTROYED_COLOR = Color.DARK_GRAY;
+
 }

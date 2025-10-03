@@ -26,7 +26,7 @@ public class Ball {
 
         if (randomizeDirection) {
             float signX = ThreadLocalRandom.current().nextBoolean() ? 1f : -1f;
-            this.xSpeed = (int)(speed * signX);
+            this.xSpeed = (int) (speed * signX);
         }
 
         this.color = UIConstants.BALL_COLOR;
@@ -77,14 +77,35 @@ public class Ball {
 
     }
 
+    public void blockHitCheck(Block block) {
+        boolean collided = ((x + size) >= block.getX())
+            && (x - size) <= (block.getX() + block.getWidth())
+            && ((y + size) >= block.getY())
+            && (y - size) <= (block.getY() + block.getHeight());
+
+        if (!collided) {
+            return;
+        }
+
+        block.destroy();
+        reverseY();
+
+    }
+
     /**
-     * Is Ball is near the bottom of the screen and the Paddle canno't possibly bounce it back up
-     * then we consider the Ball as "destroyed"
-     * */
+     * Is the Ball near the bottom of the screen, and the Paddle canno't possibly bounce it back up
+     * then we consider the Ball as destroyed!
+     *
+     */
     private void destroyIfTouchOrNearBottom() {
         if (y <= 0) {
-            destroyed = true;
+            destroy();
         }
+    }
+
+    private void destroy() {
+        color = UIConstants.BALL_COLOR_ON_HIT;
+        destroyed = true;
     }
 
     public boolean isDestroyed() {

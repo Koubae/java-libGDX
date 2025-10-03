@@ -11,15 +11,21 @@ import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.utils.ScreenUtils;
 import dev.federicobau.games.jbreakout.JBreakout;
 import dev.federicobau.games.jbreakout.config.UIConstants;
+import dev.federicobau.games.jbreakout.entities.Block;
 import dev.federicobau.games.jbreakout.entities.Paddle;
 import dev.federicobau.games.jbreakout.entities.Ball;
+
+import java.util.ArrayList;
 
 public class GameScreen implements Screen {
     final JBreakout game;
 
     private final Paddle paddle;
     private Ball ball;
+    private ArrayList<Block> blocks;
+
     // Game State
+    private int score;
     private int playerLives;
     private boolean gameOver;
     private BitmapFont livesTextFont;
@@ -28,6 +34,7 @@ public class GameScreen implements Screen {
         this.game = game;
 
         // Game State
+        this.score = 0;
         this.playerLives = UIConstants.PLAYER_LIVES;
         this.gameOver = false;
 
@@ -40,6 +47,8 @@ public class GameScreen implements Screen {
         );
 
         this.ball = _createNewBall();
+        this.blocks = new ArrayList<>();
+        _createBlocks();
     }
 
     @Override
@@ -133,7 +142,13 @@ public class GameScreen implements Screen {
             game.batch,
             new GlyphLayout(livesTextFont, String.format("Life %d", playerLives)),
             50,
-            screenHeight - 50
+            100
+        );
+        livesTextFont.draw(
+            game.batch,
+            new GlyphLayout(livesTextFont, String.format("Score %d", score)),
+            50,
+            150
         );
 
         game.batch.end();
@@ -153,6 +168,22 @@ public class GameScreen implements Screen {
             ball.update(delta, paddle, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
             ball.draw(game.renderer);
         }
+
+        for (Block block: blocks) {
+            block.draw(game.renderer);
+            ball.blockHitCheck(block);
+        }
+        // Remove destroyed blocks
+        for (int i = 0; i < blocks.size(); i ++) {
+            Block block = blocks.get(i);
+            if (block.isDestroyed()) {
+                score += 1;
+                blocks.remove(i);
+                i--;  // we need to decrement i when a ball gets removed, otherwise we skip a ball!
+            }
+        }
+
+
     }
 
     // TODO: create a NEW screen instead!
@@ -171,6 +202,28 @@ public class GameScreen implements Screen {
             UIConstants.BALL_SPEED,
             true
         );
+    }
+
+    private void _createBlocks() {
+        float width = game.viewport.getWorldWidth();
+        float height = game.viewport.getWorldHeight();
+        int blockWidth = (int) (width / UIConstants.BLOCK_WIDTH);
+        int blockHeight = UIConstants.BLOCK_HEIGHT;
+        int margin = UIConstants.BLOCK_MARGIN;
+
+        int yStart = (int) (height / 2);
+        int yEnd = (int) (height - blockHeight - margin);
+        int yNext = blockHeight + margin;
+
+        int xStart = (margin * 2);
+        int xEnd = (int)((width - blockWidth - margin));
+        int xNext = blockWidth + margin;
+
+        for (int y = yStart; y < yEnd; y += yNext) {
+            for (int x = xStart; x < xEnd; x += xNext) {
+                blocks.add(new Block(x, y, blockWidth, blockHeight));
+            }
+        }
     }
 
 }
