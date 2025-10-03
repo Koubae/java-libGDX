@@ -25,4 +25,10 @@ public final class UIConstants {
     public static final int PADDLE_HEIGHT = 15;
     public static final int PADDLE_Y_POSITION = 60;
 
+    // Ball
+    public static final int BALL_SIZE = 25;
+    public static final Color BALL_COLOR = Color.YELLOW;
+    public static final Color BALL_COLOR_ON_HIT = Color.RED;
+    public static final int BALL_SPEED = 500;
+
 }

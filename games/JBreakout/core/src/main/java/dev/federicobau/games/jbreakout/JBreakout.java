@@ -39,6 +39,7 @@ public class JBreakout extends Game {
         camera.setToOrtho(false);
 
         viewport = new ScreenViewport(camera);
+        viewport.setWorldSize(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
 
         renderer = new ShapeRenderer();
         batch = new SpriteBatch();
@@ -63,6 +64,12 @@ public class JBreakout extends Game {
     @Override
     public void render() {
         super.render();
+    }
+
+    @Override
+    public void resize(int width, int height) {
+        viewport.update(width, height, true);
+        viewport.setWorldSize(width, height);
     }
 
     @Override

@@ -12,7 +12,7 @@ public class Paddle {
     private final float width;
     private final float height;
 
-    Color color;
+    private Color color;
 
     public Paddle(float x, float y, float width, float height) {
         this.x = x;
@@ -32,7 +32,24 @@ public class Paddle {
         renderer.rect(x, y, width, height);
     }
 
+    public float getX() {
+        return x;
+    }
+
     public void setX(float x) {
         this.x = x;
     }
+
+    public float getY() {
+        return y;
+    }
+
+    public float getWidth() {
+        return width;
+    }
+
+    public float getHeight() {
+        return height;
+    }
+
 }

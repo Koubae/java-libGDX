@@ -9,23 +9,33 @@ import com.badlogic.gdx.utils.ScreenUtils;
 import dev.federicobau.games.jbreakout.JBreakout;
 import dev.federicobau.games.jbreakout.config.UIConstants;
 import dev.federicobau.games.jbreakout.entities.Paddle;
+import dev.federicobau.games.jbreakout.entities.Ball;
 
 public class GameScreen implements Screen {
     final JBreakout game;
 
     private final Paddle paddle;
-
+    private final Ball ball;
 
     public GameScreen(JBreakout game) {
         this.game = game;
 
         float screenWidth = game.viewport.getWorldWidth();
+        float screenHeight = game.viewport.getWorldHeight();
         this.paddle = new Paddle(
             (screenWidth / 2) - 150,
             UIConstants.PADDLE_Y_POSITION,
             UIConstants.PADDLE_WIDTH,
             UIConstants.PADDLE_HEIGHT
         );
+
+        this.ball = new Ball(
+            screenWidth / 2,
+            screenHeight / 2,
+            UIConstants.BALL_SIZE,
+            UIConstants.BALL_SPEED
+        );
+
     }
 
     @Override
@@ -50,6 +60,9 @@ public class GameScreen implements Screen {
 
         paddle.update(delta);
         paddle.draw(game.renderer);
+
+        ball.update(delta, paddle, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+        ball.draw(game.renderer);
 
         game.renderer.end();
         // ^^^^^^^^^^^^^^^^^^^^
