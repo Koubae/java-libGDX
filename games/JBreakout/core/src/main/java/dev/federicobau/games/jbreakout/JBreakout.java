@@ -78,10 +78,11 @@ public class JBreakout extends Game {
 
     }
 
-    private void switchScreenAndClosePrevious(Screen screen) {
+    public void switchScreenAndClosePrevious(Screen screen) {
         Screen previous = this.getScreen();
         this.setScreen(screen); // triggers old.hide(), next.show()
         if (previous != null) {
+            Gdx.app.log("JBreakout", String.format("Disposing previous screen '%s'", previous.getClass().getSimpleName()));
             previous.dispose(); // only if you don’t go back to it
         }
     }

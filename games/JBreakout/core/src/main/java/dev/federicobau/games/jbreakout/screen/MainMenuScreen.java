@@ -96,7 +96,6 @@ public class MainMenuScreen implements Screen {
         input();
 
         ScreenUtils.clear(Color.BLACK);
-
         // Update camera
         game.camera.update();
         // Apply camera to renderers
@@ -106,14 +105,19 @@ public class MainMenuScreen implements Screen {
         float screenWidth = game.viewport.getWorldWidth();
         float screenHeight = game.viewport.getWorldHeight();
 
+        // ····················
         // Shape Renderer
+
         game.renderer.begin(ShapeRenderer.ShapeType.Filled);
 
         game.renderer.setColor(Color.WHITE); // Red
-        game.renderer.rect((screenWidth / 2) - 150, 150, 150, 15);  // Paddle
+        game.renderer.rect((screenWidth / 2) - (int)(150 / 2), 60, 150, 15);  // Paddle
 
         game.renderer.end();
 
+        // ^^^^^^^^^^^^^^^^^^^^
+
+        // ····················
         // Sprite + Text Renderer
         game.batch.begin();
 
@@ -124,10 +128,13 @@ public class MainMenuScreen implements Screen {
         );
 
         game.batch.end();
+        // ^^^^^^^^^^^^^^^^^^^^
 
+        // ····················
         // Stage Render
         stage.act(delta);
         stage.draw();
+        // ^^^^^^^^^^^^^^^^^^^^
 
     }
 
@@ -174,8 +181,7 @@ public class MainMenuScreen implements Screen {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 Gdx.app.log("MainMenu", "Button Start clicked!");
-                // Here you can switch to another screen, e.g.:
-                // game.setScreen(new GameScreen());
+                game.switchScreenAndClosePrevious(new GameScreen(game));
             }
         });
 

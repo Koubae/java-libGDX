@@ -1,0 +1,92 @@
+package dev.federicobau.games.jbreakout.screen;
+
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
+import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
+import com.badlogic.gdx.utils.ScreenUtils;
+import dev.federicobau.games.jbreakout.JBreakout;
+
+public class GameScreen implements Screen  {
+    final JBreakout game;
+
+    public GameScreen(JBreakout game) {
+        this.game = game;
+    }
+
+    @Override
+    public void show() {
+
+    }
+
+    @Override
+    public void render(float delta) {
+        input();
+
+        ScreenUtils.clear(Color.BLACK);
+        // Update camera
+        game.camera.update();
+        // Apply camera to renderers
+        game.renderer.setProjectionMatrix(game.camera.combined);
+        game.batch.setProjectionMatrix(game.camera.combined);
+
+        float screenWidth = game.viewport.getWorldWidth();
+        float screenHeight = game.viewport.getWorldHeight();
+
+        // ····················
+        // Shape Renderer
+        game.renderer.begin(ShapeRenderer.ShapeType.Filled);
+
+        game.renderer.setColor(Color.WHITE); // Red
+        game.renderer.rect((screenWidth / 2) - 150, 150, 150, 15);  // Paddle
+
+        game.renderer.end();
+        // ^^^^^^^^^^^^^^^^^^^^
+
+        // ····················
+        // Sprite + Text Renderer
+        game.batch.begin();
+
+        game.batch.end();
+        // ^^^^^^^^^^^^^^^^^^^^
+
+    }
+
+    @Override
+    public void resize(int width, int height) {
+
+    }
+
+    @Override
+    public void pause() {
+
+    }
+
+    @Override
+    public void resume() {
+
+    }
+
+    @Override
+    public void hide() {
+
+    }
+
+    @Override
+    public void dispose() {
+
+    }
+
+    // ---------------------------
+    // LOGIC
+    // ---------------------------
+    private void input() {
+        if (Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE)) {
+            Gdx.app.log("GameScreen", "Closing Game and go back to MainMenuScreen");
+            game.switchScreenAndClosePrevious(new MainMenuScreen(game));
+        }
+
+    }
+
+}
