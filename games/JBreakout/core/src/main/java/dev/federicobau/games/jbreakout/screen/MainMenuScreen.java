@@ -11,6 +11,7 @@ import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
+import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
@@ -48,43 +49,22 @@ public class MainMenuScreen implements Screen {
         btnSettings.setSize(200, 60);
         btnQuit.setSize(200, 60);
 
-        this.setBtnPositions();
+        // Table layout
+        Table layoutBtn = new Table();
+        layoutBtn.setFillParent(true);   // fills the stage; auto re-layout on resize
+        layoutBtn.defaults().width(200).height(60).pad(10);
 
-        stage.addActor(btnStart);
-        stage.addActor(btnSettings);
-        stage.addActor(btnQuit);
+        layoutBtn.center();
+        layoutBtn.add(btnStart).row();
+        layoutBtn.add(btnSettings).row();
+        layoutBtn.add(btnQuit);
 
-        btnStart.addListener(new ClickListener() {
-            @Override
-            public void clicked(InputEvent event, float x, float y) {
-                Gdx.app.log("MainMenu", "Button Start clicked!");
-                // Here you can switch to another screen, e.g.:
-                // game.setScreen(new GameScreen());
-            }
-        });
+        stage.addActor(layoutBtn);
 
-        btnSettings.addListener(new ClickListener() {
-            @Override
-            public void clicked(InputEvent event, float x, float y) {
-                Gdx.app.log("MainMenu", "Button Setting clicked!");
-                // Here you can switch to another screen, e.g.:
-                // game.setScreen(new GameScreen());
-            }
-        });
-
-        btnQuit.addListener(new ClickListener() {
-            @Override
-            public void clicked(InputEvent event, float x, float y) {
-                Gdx.app.log("MainMenu", "Button Quit clicked!");
-                // Here you can switch to another screen, e.g.:
-                // game.setScreen(new GameScreen());
-
-                game.quit("MainMenuScreen Button Quit clicked!");
-            }
-        });
-
+        _registerEventListeners();
 
     }
+
 
     @Override
     public void render(float delta) {
@@ -113,8 +93,8 @@ public class MainMenuScreen implements Screen {
         // Draw text
         game.batch.begin();
 
-        game.font.draw( game.batch, "Hello World!", 100, 200);
-        game.font.draw(game.batch, "Screen: " + screenWidth + "x" + (int)screenHeight, 400, 200);
+        game.font.draw(game.batch, "Hello World!", 100, 200);
+        game.font.draw(game.batch, "Screen: " + screenWidth + "x" + (int) screenHeight, 400, 200);
 
         game.batch.end();
 
@@ -126,19 +106,6 @@ public class MainMenuScreen implements Screen {
     @Override
     public void resize(int width, int height) {
         stage.getViewport().update(width, height, true);
-        this.setBtnPositions();
-    }
-
-    private void setBtnPositions() {
-        float w = stage.getViewport().getWorldWidth();
-        float h = stage.getViewport().getWorldHeight();
-
-        float btnX = w / 2f - btnStart.getWidth() / 2f;
-        float btnY = h / 2f - btnStart.getHeight() / 2f + 100f;
-        float marginY = 20f;
-        btnStart.setPosition(btnX, btnY);
-        btnSettings.setPosition(btnX, btnY - btnStart.getHeight() - marginY);
-        btnQuit.setPosition(btnX, btnY - (btnStart.getHeight() * 2f) - (marginY * 2f));
     }
 
     @Override
@@ -170,7 +137,37 @@ public class MainMenuScreen implements Screen {
         if (Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE)) {
             this.game.quit("MainMenuScreen Escape pressed");
         }
+    }
 
+    private void _registerEventListeners() {
+        btnStart.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                Gdx.app.log("MainMenu", "Button Start clicked!");
+                // Here you can switch to another screen, e.g.:
+                // game.setScreen(new GameScreen());
+            }
+        });
+
+        btnSettings.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                Gdx.app.log("MainMenu", "Button Setting clicked!");
+                // Here you can switch to another screen, e.g.:
+                // game.setScreen(new GameScreen());
+            }
+        });
+
+        btnQuit.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                Gdx.app.log("MainMenu", "Button Quit clicked!");
+                // Here you can switch to another screen, e.g.:
+                // game.setScreen(new GameScreen());
+
+                game.quit("MainMenuScreen Button Quit clicked!");
+            }
+        });
     }
 
 }
