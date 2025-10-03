@@ -2,6 +2,7 @@ package dev.federicobau.games.jbreakout.screen;
 
 import java.util.ArrayList;
 import java.nio.file.Path;
+import java.util.List;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
@@ -178,6 +179,7 @@ public class GameScreen implements Screen {
 
         boolean collided = ball.update(delta, paddle, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
         if (collided) {
+            System.out.println("Ball bounced and collided with paddle " + delta);
             ballBouncePaddleSound.play();
         }
         if (ball.isDestroyed()) {
@@ -188,23 +190,20 @@ public class GameScreen implements Screen {
             ball.draw(game.renderer);
         }
 
-        // TODO Improve. get list of destroy indexed!
-        for (Block block : blocks) {
+        for (int i = 0; i < blocks.size(); i++) {
+            Block block = blocks.get(i);
+            if (block.isDestroyed()) {
+                blocks.remove(i);
+                i--;
+                continue;
+            }
+
             block.draw(game.renderer);
             if (ball.blockHitCheck(block)) {
                 blockDestroyedSound.play();
                 score += 1;
             }
         }
-        // Remove destroyed blocks
-        for (int i = 0; i < blocks.size(); i++) {
-            Block block = blocks.get(i);
-            if (block.isDestroyed()) {
-                blocks.remove(i);
-                i--;  // we need to decrement i when a ball gets removed, otherwise we skip a ball!
-            }
-        }
-
 
     }
 
