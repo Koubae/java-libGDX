@@ -1,5 +1,7 @@
 package dev.federicobau.games.jbreakout.entities;
 
+import java.util.concurrent.ThreadLocalRandom;
+
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import dev.federicobau.games.jbreakout.config.UIConstants;
@@ -13,16 +15,21 @@ public class Ball {
     private int ySpeed;
 
     private Color color;
+    private boolean destroyed = false;
 
-    public Ball(float x, float y, int size, int speed) {
+    public Ball(float x, float y, int size, int speed, boolean randomizeDirection) {
         this.x = x;
         this.y = y;
         this.size = size;
         this.xSpeed = speed;
         this.ySpeed = speed;
 
-        this.color = UIConstants.BALL_COLOR;
+        if (randomizeDirection) {
+            float signX = ThreadLocalRandom.current().nextBoolean() ? 1f : -1f;
+            this.xSpeed = (int)(speed * signX);
+        }
 
+        this.color = UIConstants.BALL_COLOR;
     }
 
     public void draw(ShapeRenderer shape) {
@@ -54,8 +61,9 @@ public class Ball {
             if ((y - size) <= paddle.getY()) {
                 y = (paddle.getY() + (size * 2));
             }
+        } else {
+            this.destroyIfTouchOrNearBottom();
         }
-
     }
 
     private boolean collisionWithPaddle(Paddle paddle) {
@@ -67,6 +75,20 @@ public class Ball {
 
         return touchLeft && touchRight && touchTop && touchBottom;
 
+    }
+
+    /**
+     * Is Ball is near the bottom of the screen and the Paddle canno't possibly bounce it back up
+     * then we consider the Ball as "destroyed"
+     * */
+    private void destroyIfTouchOrNearBottom() {
+        if (y <= 0) {
+            destroyed = true;
+        }
+    }
+
+    public boolean isDestroyed() {
+        return destroyed;
     }
 
     private void reverseX() {
