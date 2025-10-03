@@ -4,6 +4,9 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
+import com.badlogic.gdx.graphics.g2d.GlyphLayout;
+import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
@@ -20,9 +23,11 @@ import dev.federicobau.games.jbreakout.config.UIConstants;
 public class MainMenuScreen implements Screen {
     final JBreakout game;
 
-
     private Stage stage;
     private Skin skin;
+
+    private BitmapFont titleFont;
+    private GlyphLayout titleFontLayout = new GlyphLayout();
 
     private TextButton btnStart;
     private TextButton btnQuit;
@@ -39,6 +44,17 @@ public class MainMenuScreen implements Screen {
         Gdx.input.setInputProcessor(stage);
 
         skin = new Skin(Gdx.files.internal("uiskin.json"));
+
+        // Title
+        FreeTypeFontGenerator.FreeTypeFontParameter parameter = new FreeTypeFontGenerator.FreeTypeFontParameter();
+        parameter.color = UIConstants.TITLE_COLOR;
+        parameter.size = UIConstants.TITLE_FONT_SIZE;
+        parameter.shadowColor = UIConstants.TITLE_SHADOW_COLOR;
+        parameter.shadowOffsetX = 5;
+        parameter.shadowOffsetY = 1;
+        parameter.borderWidth = 3;
+        titleFont = game.getGenerator().generateFont(parameter);
+        titleFontLayout = new GlyphLayout(titleFont, UIConstants.GAME_TITLE);
 
         btnStart = new TextButton("New Game", skin, "green");
         btnSettings = new TextButton("Settings", skin);
@@ -75,7 +91,6 @@ public class MainMenuScreen implements Screen {
 
         // Update camera
         game.camera.update();
-
         // Apply camera to renderers
         game.renderer.setProjectionMatrix(game.camera.combined);
         game.batch.setProjectionMatrix(game.camera.combined);
@@ -83,22 +98,26 @@ public class MainMenuScreen implements Screen {
         float screenWidth = game.viewport.getWorldWidth();
         float screenHeight = game.viewport.getWorldHeight();
 
+        // Shape Renderer
         game.renderer.begin(ShapeRenderer.ShapeType.Filled);
 
-        game.renderer.setColor(1, 0, 0, 1); // Red
-        game.renderer.rect(100, 100, 200, 50);
-        game.renderer.rect(screenWidth / 2, screenHeight / 2, 200, 50);
+        game.renderer.setColor(Color.WHITE); // Red
+        game.renderer.rect((screenWidth / 2) - 150, 150, 150, 15);  // Paddle
 
         game.renderer.end();
 
-        // Draw text
+        // Sprite + Text Renderer
         game.batch.begin();
 
-        game.font.draw(game.batch, "Hello World!", 100, 200);
-        game.font.draw(game.batch, "Screen: " + screenWidth + "x" + (int) screenHeight, 400, 200);
+        titleFont.draw(
+            game.batch, titleFontLayout,
+            (screenWidth - titleFontLayout.width) / 2f,
+            screenHeight - 100
+        );
 
         game.batch.end();
 
+        // Stage Render
         stage.act(delta);
         stage.draw();
 
@@ -125,13 +144,14 @@ public class MainMenuScreen implements Screen {
             Gdx.input.setInputProcessor(null);
         }
         // Optional if you want to free memory but keep the screen alive:
-        // stage.clear();
+        stage.clear();
     }
 
     @Override
     public void dispose() {
         stage.dispose();
         skin.dispose();
+        titleFont.dispose();
     }
 
     private void input() {

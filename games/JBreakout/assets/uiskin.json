@@ -65,10 +65,11 @@ SliderStyle: {
 	default-vertical: { parent: default-vertical }
 },
 LabelStyle: {
-	default: { font: default-font, fontColor: white }
+	default: { font: default-font, fontColor: white },
+	green: { font: default-font, fontColor: green },
 },
 TextFieldStyle: {
-	default: { selection: selection, background: textfield, font: default-font, fontColor: white, cursor: cursor }
+	default: { selection: selection, background: textfield, font: default-font, fontColor: white, cursor: cursor },
 },
 CheckBoxStyle: {
 	default: { checkboxOn: check-on, checkboxOff: check-off, font: default-font, fontColor: white }
