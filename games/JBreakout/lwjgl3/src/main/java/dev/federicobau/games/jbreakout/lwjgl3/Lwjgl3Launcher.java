@@ -1,5 +1,6 @@
 package dev.federicobau.games.jbreakout.lwjgl3;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Graphics;
 import com.badlogic.gdx.backends.lwjgl3.Lwjgl3Application;
 import com.badlogic.gdx.backends.lwjgl3.Lwjgl3ApplicationConfiguration;
@@ -67,6 +68,9 @@ public class Lwjgl3Launcher {
         int windowWidth = (int) (displayMode.width * 0.8f);
         int windowHeight = (int) (displayMode.height * 0.8f);
         System.out.println("Monitor >> " + targetMonitor.name + " " + monitorIndex + " W=" + windowWidth + " H=" + windowHeight);
+
+//        Gdx.app.log("Lwjgl3Launcher", "Monitor >> " + targetMonitor.name + " " + monitorIndex + " W=" + windowWidth + " H=" + windowHeight);
+
         // 4) Center the window on the target monitor
         int centerX = targetMonitor.virtualX + (displayMode.width - windowWidth) / 2;
         int centerY = targetMonitor.virtualY + (displayMode.height - windowHeight) / 2;
