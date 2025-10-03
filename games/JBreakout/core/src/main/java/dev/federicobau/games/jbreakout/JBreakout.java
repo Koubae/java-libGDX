@@ -3,6 +3,7 @@ package dev.federicobau.games.jbreakout;
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
@@ -37,7 +38,7 @@ public class JBreakout extends Game {
         batch = new SpriteBatch();
         font = new BitmapFont();
 
-        this.setScreen(new MainMenuScreen(this));
+        this.switchScreenAndClosePrevious(new MainMenuScreen(this));
     }
 
     @Override
@@ -47,8 +48,34 @@ public class JBreakout extends Game {
 
     @Override
     public void dispose() {
+        super.dispose();
+
         renderer.dispose();
         batch.dispose();
         font.dispose();
+
+        Screen screen = this.getScreen();
+        if (screen != null) { // clear possible left-over screens
+            screen.dispose();
+        }
+    }
+
+    public void quit(String source) {
+        Gdx.app.log("JBreakout", String.format("Quitting (source=%s) ...", source));
+        Screen previous = this.getScreen();
+        if (previous != null) {
+            previous.dispose(); // only if you don’t go back to it
+        }
+
+        Gdx.app.exit();
+
+    }
+
+    private void switchScreenAndClosePrevious(Screen screen) {
+        Screen previous = this.getScreen();
+        this.setScreen(screen); // triggers old.hide(), next.show()
+        if (previous != null) {
+            previous.dispose(); // only if you don’t go back to it
+        }
     }
 }

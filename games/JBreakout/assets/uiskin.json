@@ -7,21 +7,29 @@ Color: {
 	black: { a: 1, b: 0, g: 0, r: 0 },
 	gray: { a: 1, b: 0.8, g: 0.8, r: 0.8 },
 
-    darkGreen: { r: 0, g: 0.6, b: 0, a: 1 },
+	cyan: { a: 1, b: 1, g: 1, r: 0 },
+	darkBlue: { a: 1, b: 0.9, g: 0, r: 0 },
+
+    darkGreen: { r: 0, g: 0.6, b: 0, a: 1 }
 },
 TintedDrawable: {
 	dialogDim: { name: white, color: { r: 0, g: 0, b: 0, a: 0.45 } },
+
+  btn-default-up:   { name: default-round,      color: cyan },
+  btn-default-down: { name: default-round-down, color: darkBlue },
 
   btn-green-up:   { name: default-round,      color: green },
   btn-green-down: { name: default-round-down, color: darkGreen },
 },
 ButtonStyle: {
-	default: { down: default-round-down, up: default-round, disabled: default-round },
+	default: { down: btn-default-down, up: btn-default-up, disabled: btn-default-up },
+	default-grey: { down: default-round-down, up: default-round, disabled: default-round },
 	toggle: { parent: default, checked: default-round-down }
 },
 TextButtonStyle: {
 	default: { parent: default, font: default-font, fontColor: white, disabledFontColor: gray },
 	toggle: { parent: default, checked: default-round-down, downFontColor: red },
+    grey:   { parent: default-grey, font: default-font, fontColor: white, disabledFontColor: gray },
     green: {
       parent: default,
       up: btn-green-up,

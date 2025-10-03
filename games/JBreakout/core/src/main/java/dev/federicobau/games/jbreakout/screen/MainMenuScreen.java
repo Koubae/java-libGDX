@@ -23,7 +23,10 @@ public class MainMenuScreen implements Screen {
 
     private Stage stage;
     private Skin skin;
-    private TextButton startButton;
+
+    private TextButton btnStart;
+    private TextButton btnQuit;
+    private TextButton btnSettings;
 
 
     public MainMenuScreen(JBreakout game) {
@@ -35,53 +38,62 @@ public class MainMenuScreen implements Screen {
         stage = new Stage(game.viewport, game.batch);
         Gdx.input.setInputProcessor(stage);
 
-//        skin = new Skin(Gdx.files.internal("uiskin.json"));
         skin = new Skin(Gdx.files.internal("uiskin.json"));
 
-//        TextureRegionDrawable up = new TextureRegionDrawable(new TextureRegion(new Texture("button_up.png")));
-//        TextureRegionDrawable down = new TextureRegionDrawable(new TextureRegion(new Texture("button_down.png")));
-//        TextButton.TextButtonStyle style = new TextButton.TextButtonStyle(up, down, up, new BitmapFont());
-//
-//        startButton = new TextButton("Click Me", style);
-//        TextButton button = new TextButton("Click Me", style);
+        btnStart = new TextButton("New Game", skin, "green");
+        btnSettings = new TextButton("Settings", skin);
+        btnQuit = new TextButton("Exit", skin, "grey");
 
-        startButton = new TextButton("Start Game", skin);
-        startButton.setSize(200, 60);
-        startButton.setPosition(
-            Gdx.graphics.getWidth() / 2f - startButton.getWidth() / 2,
-            Gdx.graphics.getHeight() / 2f - startButton.getHeight() / 2
-        );
+        btnStart.setSize(200, 60);
+        btnSettings.setSize(200, 60);
+        btnQuit.setSize(200, 60);
 
-        startButton.addListener(new ClickListener() {
+        float screenWidthHalf = Gdx.graphics.getWidth() / 2f;
+        float screenHeightHalf = Gdx.graphics.getHeight() / 2f;
+
+        float btnScreenPosX = screenWidthHalf - btnStart.getWidth() / 2;
+        float btnScreenPosY = (screenHeightHalf - btnStart.getHeight() / 2) + 100;
+        int marginY = 20;
+
+        btnStart.setPosition(btnScreenPosX, btnScreenPosY);
+        btnSettings.setPosition(btnScreenPosX, btnScreenPosY - btnStart.getHeight() - marginY);
+        btnQuit.setPosition(btnScreenPosX, btnScreenPosY - (btnStart.getHeight() * 2) - (marginY * 2));
+
+
+        stage.addActor(btnStart);
+        stage.addActor(btnSettings);
+        stage.addActor(btnQuit);
+
+        btnStart.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                Gdx.app.log("MainMenu", "Start button clicked!");
+                Gdx.app.log("MainMenu", "Button Start clicked!");
                 // Here you can switch to another screen, e.g.:
                 // game.setScreen(new GameScreen());
             }
         });
 
-        stage.addActor(startButton);
+        btnSettings.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                Gdx.app.log("MainMenu", "Button Setting clicked!");
+                // Here you can switch to another screen, e.g.:
+                // game.setScreen(new GameScreen());
+            }
+        });
 
-        // Custom button
-        TextButton.TextButtonStyle style = new TextButton.TextButtonStyle();
-        style.font = skin.getFont("default-font");
-        style.up   = skin.newDrawable("default-round", Color.GREEN); // normal state
-        style.down = skin.newDrawable("default-round-down", Color.DARK_GRAY); // pressed state
-        style.fontColor = Color.WHITE;
+        btnQuit.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                Gdx.app.log("MainMenu", "Button Quit clicked!");
+                // Here you can switch to another screen, e.g.:
+                // game.setScreen(new GameScreen());
 
-        TextButton greenButton = new TextButton("Play", style);
-        greenButton.setSize(200, 60);
-        greenButton.setPosition(200, 300);
+                game.quit("MainMenuScreen Button Quit clicked!");
+            }
+        });
 
-        stage.addActor(greenButton);
 
-        // Green here is a custom style added in uiskin.json
-        TextButton greenCustomStyleButton = new TextButton("Play 2", skin, "green");
-        greenCustomStyleButton.setSize(200, 60);
-        greenCustomStyleButton.setPosition(400, 300);
-
-        stage.addActor(greenCustomStyleButton);
     }
 
     @Override
@@ -121,11 +133,9 @@ public class MainMenuScreen implements Screen {
 
     }
 
-
-
     @Override
     public void resize(int width, int height) {
-        game.viewport.update(width, height, true);
+        stage.getViewport().update(width, height, true);
     }
 
     @Override
@@ -140,7 +150,11 @@ public class MainMenuScreen implements Screen {
 
     @Override
     public void hide() {
-
+        if (Gdx.input.getInputProcessor() == stage) {
+            Gdx.input.setInputProcessor(null);
+        }
+        // Optional if you want to free memory but keep the screen alive:
+        // stage.clear();
     }
 
     @Override
@@ -151,8 +165,9 @@ public class MainMenuScreen implements Screen {
 
     private void input() {
         if (Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE)) {
-            Gdx.app.exit();
+            this.game.quit("MainMenuScreen Escape pressed");
         }
+
     }
 
 }
