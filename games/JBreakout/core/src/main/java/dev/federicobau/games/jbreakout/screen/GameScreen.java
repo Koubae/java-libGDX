@@ -7,12 +7,26 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.utils.ScreenUtils;
 import dev.federicobau.games.jbreakout.JBreakout;
+import dev.federicobau.games.jbreakout.config.UIConstants;
+import dev.federicobau.games.jbreakout.entities.Paddle;
 
-public class GameScreen implements Screen  {
+public class GameScreen implements Screen {
     final JBreakout game;
+
+    private final Paddle paddle;
+
 
     public GameScreen(JBreakout game) {
         this.game = game;
+
+        float screenWidth = game.viewport.getWorldWidth();
+        float screenHeight = game.viewport.getWorldHeight();
+        this.paddle = new Paddle(
+            (screenWidth / 2) - 150,
+            UIConstants.PADDLE_Y_POSITION,
+            UIConstants.PADDLE_WIDTH,
+            UIConstants.PADDLE_HEIGHT
+        );
     }
 
     @Override
@@ -31,15 +45,12 @@ public class GameScreen implements Screen  {
         game.renderer.setProjectionMatrix(game.camera.combined);
         game.batch.setProjectionMatrix(game.camera.combined);
 
-        float screenWidth = game.viewport.getWorldWidth();
-        float screenHeight = game.viewport.getWorldHeight();
-
         // ····················
         // Shape Renderer
         game.renderer.begin(ShapeRenderer.ShapeType.Filled);
 
-        game.renderer.setColor(Color.WHITE); // Red
-        game.renderer.rect((screenWidth / 2) - 150, 150, 150, 15);  // Paddle
+        paddle.update(delta);
+        paddle.draw(game.renderer);
 
         game.renderer.end();
         // ^^^^^^^^^^^^^^^^^^^^

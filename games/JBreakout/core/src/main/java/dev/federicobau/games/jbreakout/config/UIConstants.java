@@ -19,4 +19,10 @@ public final class UIConstants {
     public static final float BUTTON_HEIGHT = 60f;
     public static final float BUTTON_MARGIN_Y = 20f;
 
+    // Paddle
+    public static final Color PADDLE_COLOR = Color.WHITE;
+    public static final int PADDLE_WIDTH = 150;
+    public static final int PADDLE_HEIGHT = 15;
+    public static final int PADDLE_Y_POSITION = 60;
+
 }

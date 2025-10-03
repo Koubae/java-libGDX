@@ -19,6 +19,7 @@ import com.badlogic.gdx.utils.ScreenUtils;
 
 import dev.federicobau.games.jbreakout.JBreakout;
 import dev.federicobau.games.jbreakout.config.UIConstants;
+import dev.federicobau.games.jbreakout.entities.Paddle;
 
 
 public class MainMenuScreen implements Screen {
@@ -35,9 +36,17 @@ public class MainMenuScreen implements Screen {
     private TextButton btnQuit;
     private TextButton btnSettings;
 
+    private final Paddle paddle;
+
 
     public MainMenuScreen(JBreakout game) {
         this.game = game;
+        this.paddle = new Paddle(
+            0,
+            UIConstants.PADDLE_Y_POSITION,
+            UIConstants.PADDLE_WIDTH,
+            UIConstants.PADDLE_HEIGHT
+        );
 
         music = Gdx.audio.newMusic(Gdx.files.internal("sounds/relent-1.mp3"));
         music.setLooping(true);
@@ -107,11 +116,10 @@ public class MainMenuScreen implements Screen {
 
         // ····················
         // Shape Renderer
-
         game.renderer.begin(ShapeRenderer.ShapeType.Filled);
 
-        game.renderer.setColor(Color.WHITE); // Red
-        game.renderer.rect((screenWidth / 2) - (int)(150 / 2), 60, 150, 15);  // Paddle
+        paddle.setX((screenWidth / 2) - (int)(UIConstants.PADDLE_WIDTH / 2));
+        paddle.draw(game.renderer);
 
         game.renderer.end();
 
