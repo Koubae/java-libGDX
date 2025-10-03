@@ -3,6 +3,7 @@ package dev.federicobau.games.jbreakout.screen;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.GlyphLayout;
@@ -24,6 +25,7 @@ public class MainMenuScreen implements Screen {
     final JBreakout game;
 
     private Stage stage;
+    Music music;
     private Skin skin;
 
     private BitmapFont titleFont;
@@ -36,10 +38,16 @@ public class MainMenuScreen implements Screen {
 
     public MainMenuScreen(JBreakout game) {
         this.game = game;
+
+        music = Gdx.audio.newMusic(Gdx.files.internal("sounds/relent-1.mp3"));
+        music.setLooping(true);
+        music.setVolume(0.5F);
     }
 
     @Override
     public void show() {
+        music.play();
+
         stage = new Stage(game.viewport, game.batch);
         Gdx.input.setInputProcessor(stage);
 
@@ -152,6 +160,7 @@ public class MainMenuScreen implements Screen {
         stage.dispose();
         skin.dispose();
         titleFont.dispose();
+        music.dispose();
     }
 
     private void input() {
