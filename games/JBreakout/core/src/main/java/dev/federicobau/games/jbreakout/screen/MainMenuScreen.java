@@ -38,7 +38,6 @@ public class MainMenuScreen implements Screen {
 
     private final Paddle paddle;
 
-
     public MainMenuScreen(JBreakout game) {
         this.game = game;
         this.paddle = new Paddle(
@@ -50,7 +49,7 @@ public class MainMenuScreen implements Screen {
 
         music = Gdx.audio.newMusic(Gdx.files.internal("sounds/relent-1.mp3"));
         music.setLooping(true);
-        music.setVolume(0.5F);
+        music.setVolume(1F);
     }
 
     @Override

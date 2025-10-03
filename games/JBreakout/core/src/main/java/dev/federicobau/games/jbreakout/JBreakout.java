@@ -11,6 +11,9 @@ import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 
 import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
+import dev.federicobau.games.jbreakout.config.AppConfig;
+import dev.federicobau.games.jbreakout.config.StartScreen;
+import dev.federicobau.games.jbreakout.screen.GameScreen;
 import dev.federicobau.games.jbreakout.screen.MainMenuScreen;
 
 
@@ -25,8 +28,12 @@ public class JBreakout extends Game {
     public OrthographicCamera camera;
     public Viewport viewport;
 
+    private AppConfig config;
+
     @Override
     public void create() {
+        config = AppConfig.load();
+
         // Create camera
         camera = new OrthographicCamera();
         camera.setToOrtho(false);
@@ -39,8 +46,18 @@ public class JBreakout extends Game {
 
         generator = new FreeTypeFontGenerator(Gdx.files.internal("fonts/honk.ttf"));
 
+        Screen startScreen;
+        switch (this.config.startScreen) {
+            case StartScreen.GAMEPLAY:
+                startScreen = new GameScreen(this);
+                break;
+            case StartScreen.MAIN_MENU:
+            default:
+                startScreen = new MainMenuScreen(this);
+                break;
+        }
 
-        this.switchScreenAndClosePrevious(new MainMenuScreen(this));
+        this.switchScreenAndClosePrevious(startScreen);
     }
 
     @Override

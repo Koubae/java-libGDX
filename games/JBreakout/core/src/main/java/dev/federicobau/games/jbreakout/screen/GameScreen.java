@@ -20,7 +20,6 @@ public class GameScreen implements Screen {
         this.game = game;
 
         float screenWidth = game.viewport.getWorldWidth();
-        float screenHeight = game.viewport.getWorldHeight();
         this.paddle = new Paddle(
             (screenWidth / 2) - 150,
             UIConstants.PADDLE_Y_POSITION,
