@@ -147,7 +147,6 @@ public class GameScreen implements Screen {
         }
 
         if (Gdx.input.isKeyJustPressed(Input.Keys.P)) {
-            System.out.println("P pressed");
             setPause(!paused);
         }
 
@@ -155,7 +154,6 @@ public class GameScreen implements Screen {
 
     private void _inputPaused() {
         if (Gdx.input.isKeyJustPressed(Input.Keys.P) || Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE)) {
-            System.out.println("P pressed");
             setPause(!paused);
         }
     }
