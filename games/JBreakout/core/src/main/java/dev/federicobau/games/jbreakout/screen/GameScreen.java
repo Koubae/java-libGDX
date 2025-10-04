@@ -105,7 +105,7 @@ public class GameScreen implements Screen {
         gameState();
         input();
 
-        ScreenUtils.clear(Color.BLACK);
+        ScreenUtils.clear(Color.BLACK, true);
         // Update camera
         game.camera.update();
         // Apply camera to renderers
