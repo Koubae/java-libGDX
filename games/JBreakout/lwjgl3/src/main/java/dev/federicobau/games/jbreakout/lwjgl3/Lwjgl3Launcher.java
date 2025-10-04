@@ -63,7 +63,7 @@ public class Lwjgl3Launcher {
 //        Graphics.Monitor targetMonitor = monitors.length > 1 ? monitors[1] : monitors[0]; // Change index to select different monitor
 
         // 1) Get the target Monitor
-        int monitorIndex = 2;
+        int monitorIndex = 1;
         Graphics.Monitor targetMonitor = monitors[monitorIndex];
         // 2) Get Monitor's display mode
         Graphics.DisplayMode displayMode = Lwjgl3ApplicationConfiguration.getDisplayMode(targetMonitor);

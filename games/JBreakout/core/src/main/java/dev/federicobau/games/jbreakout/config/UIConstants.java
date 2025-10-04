@@ -8,7 +8,7 @@ public final class UIConstants {
     }
     // Game
     public static final String GAME_TITLE = "JBreakout";
-    public static final int PLAYER_LIVES = 3;
+    public static final int PLAYER_LIVES = 30;
     public static final int PLAYER_LIVES_FONT_SIZE = 50;
     public static final Color PLAYER_LIVES_TEXT_COLOR = Color.RED;
 

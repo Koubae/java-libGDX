@@ -76,13 +76,11 @@ public class GameScreen implements Screen {
     }
 
     @Override
-    public void resize(int width, int height) {
-
-    }
+    public void resize(int width, int height) {}
 
     @Override
     public void pause() {
-
+        System.out.println("GameScreen Paused");
     }
 
     @Override
@@ -179,7 +177,6 @@ public class GameScreen implements Screen {
 
         boolean collided = ball.update(delta, paddle, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
         if (collided) {
-            System.out.println("Ball bounced and collided with paddle " + delta);
             ballBouncePaddleSound.play();
         }
         if (ball.isDestroyed()) {

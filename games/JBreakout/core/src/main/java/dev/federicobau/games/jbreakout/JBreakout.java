@@ -1,8 +1,6 @@
 package dev.federicobau.games.jbreakout;
 
-import com.badlogic.gdx.Game;
-import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.*;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
@@ -17,7 +15,9 @@ import dev.federicobau.games.jbreakout.screen.GameScreen;
 import dev.federicobau.games.jbreakout.screen.MainMenuScreen;
 
 
-/** {@link com.badlogic.gdx.ApplicationListener} implementation shared by all platforms. */
+/**
+ * {@link com.badlogic.gdx.ApplicationListener} implementation shared by all platforms.
+ */
 public class JBreakout extends Game {
     public ShapeRenderer renderer;
     public SpriteBatch batch;
@@ -29,6 +29,10 @@ public class JBreakout extends Game {
     public Viewport viewport;
 
     private AppConfig config;
+
+    // Game State
+    private float delta;
+    private float deltaLogStats;
 
     @Override
     public void create() {
@@ -63,11 +67,21 @@ public class JBreakout extends Game {
 
     @Override
     public void render() {
+        input();
+
+        delta = Gdx.graphics.getDeltaTime();
+
+        if (config.logStats) {
+            _debugLogStats();
+        }
+
+
         super.render();
     }
 
     @Override
     public void resize(int width, int height) {
+        super.resize(width, height);
         viewport.update(width, height, true);
         viewport.setWorldSize(width, height);
     }
@@ -110,4 +124,43 @@ public class JBreakout extends Game {
             previous.dispose(); // only if you don’t go back to it
         }
     }
+
+    private void input() {
+        if (Gdx.input.isKeyJustPressed(Input.Keys.F1)) {
+            _switchFullScreenMode();
+        }
+    }
+
+    private void _switchFullScreenMode() {
+        Graphics.DisplayMode currentMode = Gdx.graphics.getDisplayMode();
+        Boolean fullScreen = Gdx.graphics.isFullscreen();
+        Boolean fullScreenNew = !fullScreen;
+
+        Gdx.app.log("JBreakout", String.format("Switching fullscreen mode from '%s' to '%s'", fullScreen, fullScreenNew));
+
+        if (fullScreenNew) {
+            Gdx.graphics.setFullscreenMode(currentMode);
+        } else {
+            int windowWidth = (int) (currentMode.width * 0.8f);  // Set it to 80%
+            int windowHeight = (int) (currentMode.height * 0.8f);
+            Gdx.graphics.setWindowedMode(windowWidth, windowHeight);
+        }
+    }
+
+    private void _debugLogStats() {
+        deltaLogStats += delta;
+
+        boolean shouldLog = (int) (deltaLogStats) != 0 && (int) (deltaLogStats) % config.logStatsIntervalSeconds == 0;
+        if (!shouldLog) {
+            return;
+        }
+
+        deltaLogStats = 0.0f;
+        long javaHeap = Gdx.app.getJavaHeap();
+        long nativeHeap = Gdx.app.getNativeHeap();
+        int frames = Gdx.graphics.getFramesPerSecond();
+        String stats = String.format("STATS: Java heap: %d, Native heap: %d, FPS: %d", javaHeap, nativeHeap, frames);
+        Gdx.app.log("JBreakout", stats);
+    }
+
 }
