@@ -37,6 +37,7 @@ public class JBreakout extends Game {
     @Override
     public void create() {
         config = AppConfig.load();
+        config.setLogLevel();
 
         // Create camera
         camera = new OrthographicCamera();
@@ -63,6 +64,8 @@ public class JBreakout extends Game {
         }
 
         this.switchScreenAndClosePrevious(startScreen);
+
+        Gdx.app.debug("JBreakout", "Application created");
     }
 
     @Override
