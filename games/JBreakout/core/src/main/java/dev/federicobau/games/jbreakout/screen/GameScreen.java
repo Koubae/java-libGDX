@@ -2,7 +2,6 @@ package dev.federicobau.games.jbreakout.screen;
 
 import java.util.ArrayList;
 import java.nio.file.Path;
-import java.util.List;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
@@ -23,12 +22,14 @@ import dev.federicobau.games.jbreakout.entities.Ball;
 
 public class GameScreen implements Screen {
     final JBreakout game;
+    final PauseScreenOverlay pauseScreen;
 
     private final Paddle paddle;
     private Ball ball;
     private ArrayList<Block> blocks;
 
     // Game State
+    private boolean paused = false;
     private int score;
     private int playerLives;
     private boolean gameOver;
@@ -40,6 +41,7 @@ public class GameScreen implements Screen {
 
     public GameScreen(JBreakout game) {
         this.game = game;
+        this.pauseScreen = new PauseScreenOverlay(game, this);
 
         // Sounds Effect & Music
         ballBouncePaddleSound = Gdx.audio.newSound(
@@ -76,35 +78,35 @@ public class GameScreen implements Screen {
     }
 
     @Override
-    public void resize(int width, int height) {}
+    public void resize(int width, int height) {
+    }
 
     @Override
     public void pause() {
-        System.out.println("GameScreen Paused");
+        _pause();
     }
 
     @Override
     public void resume() {
-
+        _resume();
     }
 
     @Override
     public void hide() {
-
+        Gdx.app.debug("GameScreen", "Screen Hidden");
     }
 
     @Override
     public void dispose() {
+        Gdx.app.debug("GameScreen", "Disposing...");
         ballBouncePaddleSound.dispose();
         blockDestroyedSound.dispose();
         livesTextFont.dispose();
+        pauseScreen.dispose();
     }
 
     @Override
     public void render(float delta) {
-        gameState();
-        input();
-
         ScreenUtils.clear(Color.BLACK, true);
         // Update camera
         game.camera.update();
@@ -112,23 +114,78 @@ public class GameScreen implements Screen {
         game.renderer.setProjectionMatrix(game.camera.combined);
         game.batch.setProjectionMatrix(game.camera.combined);
 
-        _draw(delta);
+        _gameLoop(delta);
 
     }
 
     // ---------------------------
     // LOGIC
     // ---------------------------
+    private void _gameLoop(float delta) {
+        gameState();
+
+        if (paused) {
+            _inputPaused();
+        } else {
+            _inputUnPaused();
+            _gameLogic(delta);
+        }
+
+        _draw(delta);
+    }
+
     private void gameState() {
         if (playerLives <= 0) {
             gameOver = true;
         }
     }
 
-    private void input() {
+    private void _inputUnPaused() {
         if (Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE)) {
             Gdx.app.log("GameScreen", "Closing Game and go back to MainMenuScreen");
             game.switchScreenAndClosePrevious(new MainMenuScreen(game));
+        }
+
+        if (Gdx.input.isKeyJustPressed(Input.Keys.P)) {
+            System.out.println("P pressed");
+            setPause(!paused);
+        }
+
+    }
+
+    private void _inputPaused() {
+        if (Gdx.input.isKeyJustPressed(Input.Keys.P) || Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE)) {
+            System.out.println("P pressed");
+            setPause(!paused);
+        }
+    }
+
+    private void _gameLogic(float delta) {
+        paddle.update(delta);
+
+        boolean collided = ball.update(delta, paddle, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+        if (collided) {
+            ballBouncePaddleSound.play();
+        }
+
+        if (ball.isDestroyed()) {
+            this.playerLives -= 1;
+            this.ball = _createNewBall();
+        } else {
+            ball.update(delta, paddle, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+        }
+
+        for (int i = 0; i < blocks.size(); i++) {
+            Block block = blocks.get(i);
+            if (block.isDestroyed()) {
+                blocks.remove(i);
+                i--;
+                continue;
+            }
+            if (ball.blockHitCheck(block)) {
+                blockDestroyedSound.play();
+                score += 1;
+            }
         }
 
     }
@@ -138,7 +195,6 @@ public class GameScreen implements Screen {
             _drawGameOver();
             return;
         }
-        float screenHeight = game.viewport.getWorldHeight();
 
         // ····················
         // Shape Renderer
@@ -172,36 +228,37 @@ public class GameScreen implements Screen {
     }
 
     private void _drawGamePlay(float delta) {
-        paddle.update(delta);
         paddle.draw(game.renderer);
-
-        boolean collided = ball.update(delta, paddle, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
-        if (collided) {
-            ballBouncePaddleSound.play();
-        }
-        if (ball.isDestroyed()) {
-            this.playerLives -= 1;
-            this.ball = _createNewBall();
-        } else {
-            ball.update(delta, paddle, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
-            ball.draw(game.renderer);
-        }
-
-        for (int i = 0; i < blocks.size(); i++) {
-            Block block = blocks.get(i);
-            if (block.isDestroyed()) {
-                blocks.remove(i);
-                i--;
-                continue;
-            }
-
+        ball.draw(game.renderer);
+        for (Block block : blocks) {
             block.draw(game.renderer);
-            if (ball.blockHitCheck(block)) {
-                blockDestroyedSound.play();
-                score += 1;
-            }
         }
 
+    }
+
+    public void setPause(boolean pause) {
+        paused = pause;
+        if (paused) {
+            _pause();
+        } else {
+            _resume();
+        }
+    }
+
+    private void _pause() {
+        Gdx.app.debug("GameScreen", "Game Paused");
+        paused = true;
+
+        // TODO: keep pause overlay in memory!
+        game.switchScreenAndHidePrevious(this.pauseScreen);
+
+    }
+
+    private void _resume() {
+        Gdx.app.debug("GameScreen", "Game Resumed");
+        paused = false;
+
+        game.switchScreenAndHidePrevious(this);
     }
 
     // TODO: create a NEW screen instead!

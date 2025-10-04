@@ -121,11 +121,27 @@ public class JBreakout extends Game {
 
     public void switchScreenAndClosePrevious(Screen screen) {
         Screen previous = this.getScreen();
-        this.setScreen(screen); // triggers old.hide(), next.show()
         if (previous != null) {
-            Gdx.app.log("JBreakout", String.format("Disposing previous screen '%s'", previous.getClass().getSimpleName()));
+            Gdx.app.debug(
+                "JBreakout",
+                String.format("Disposing previous screen '%s'", previous.getClass().getSimpleName())
+            );
             previous.dispose(); // only if you don’t go back to it
         }
+
+        this.setScreen(screen); // triggers old.hide(), next.show()
+    }
+
+    public void switchScreenAndHidePrevious(Screen screen) {
+        Screen previous = this.getScreen();
+        if (previous != null) {
+            Gdx.app.debug(
+                "JBreakout",
+                String.format("Hiding previous screen '%s'", previous.getClass().getSimpleName())
+            );
+            previous.hide();
+        }
+        this.setScreen(screen);
     }
 
     private void input() {
@@ -139,7 +155,10 @@ public class JBreakout extends Game {
         Boolean fullScreen = Gdx.graphics.isFullscreen();
         Boolean fullScreenNew = !fullScreen;
 
-        Gdx.app.log("JBreakout", String.format("Switching fullscreen mode from '%s' to '%s'", fullScreen, fullScreenNew));
+        Gdx.app.log(
+            "JBreakout",
+            String.format("Switching fullscreen mode from '%s' to '%s'", fullScreen, fullScreenNew)
+        );
 
         if (fullScreenNew) {
             Gdx.graphics.setFullscreenMode(currentMode);
