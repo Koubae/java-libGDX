@@ -31,6 +31,7 @@ public class GameScreen implements Screen {
     // Game State
     private boolean paused = false;
     private int score;
+    private boolean isBallLaunched = false;
     private int playerLives;
     private boolean gameOver;
     private BitmapFont livesTextFont;
@@ -141,6 +142,13 @@ public class GameScreen implements Screen {
     }
 
     private void _inputUnPaused() {
+        if (!isBallLaunched) {
+            if (Gdx.input.isKeyJustPressed(Input.Keys.SPACE)) {
+                _launchBall();
+                isBallLaunched = true;
+            }
+        }
+
         if (Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE)) {
             Gdx.app.log("GameScreen", "Closing Game and go back to MainMenuScreen");
             game.switchScreenAndClosePrevious(new MainMenuScreen(game));
@@ -168,6 +176,7 @@ public class GameScreen implements Screen {
 
         if (ball.isDestroyed()) {
             this.playerLives -= 1;
+            this.isBallLaunched = false;
             this.ball = _createNewBall();
         } else {
             ball.update(delta, paddle, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
@@ -266,15 +275,19 @@ public class GameScreen implements Screen {
     }
 
     private Ball _createNewBall() {
-        float screenWidth = game.viewport.getWorldWidth();
-        float screenHeight = game.viewport.getWorldHeight();
+        float x = paddle.getX() + (paddle.getWidth() / 2);
+        float y = paddle.getY() + (paddle.getHeight() / 2) + (UIConstants.BALL_SIZE * 2) + 10;
         return new Ball(
-            screenWidth / 2,
-            screenHeight / 2,
+            x,
+            y,
             UIConstants.BALL_SIZE,
             UIConstants.BALL_SPEED,
             true
         );
+    }
+
+    private void _launchBall() {
+        ball.launch(true);
     }
 
     private void _createBlocks() {

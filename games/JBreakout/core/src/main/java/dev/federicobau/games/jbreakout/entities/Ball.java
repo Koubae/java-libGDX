@@ -15,6 +15,7 @@ public class Ball {
     private int ySpeed;
 
     private Color color;
+    private boolean isMoving = false;
     private boolean destroyed = false;
 
     public Ball(float x, float y, int size, int speed, boolean randomizeDirection) {
@@ -38,6 +39,11 @@ public class Ball {
     }
 
     public boolean update(float delta, Paddle paddle, float worldWidth, float worldHeight) {
+        if (!isMoving) {
+            x = paddle.getX() + (paddle.getWidth() / 2);  // Stay in the middle of the paddle
+            return false;
+        }
+
         // move
         x += xSpeed * delta;
         y += ySpeed * delta;
@@ -105,6 +111,10 @@ public class Ball {
         if (y <= 0) {
             destroy();
         }
+    }
+
+    public void launch(boolean moving) {
+        isMoving = moving;
     }
 
     private void destroy() {
