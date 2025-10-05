@@ -87,6 +87,7 @@ public class MainMenuScreen implements Screen {
             .width(UIConstants.BUTTON_WIDTH)
             .height(UIConstants.BUTTON_HEIGHT)
             .pad(UIConstants.BUTTON_MARGIN_Y);
+        layoutBtn.setDebug(false); // This is optional, but enables debug lines for tables.
 
         layoutBtn.center();
         layoutBtn.add(btnStart).row();
